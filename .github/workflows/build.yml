@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     name: Build iOS IPA / App
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout Code
@@ -18,11 +18,7 @@ jobs:
 
       - name: Select Xcode Version
         run: |
-          DEVELOPER_DIR=$(ls -d /Applications/Xcode*.app/Contents/Developer 2>/dev/null | sort -V | tail -n 1)
-          if [ -n "$DEVELOPER_DIR" ]; then
-            echo "Selecting Xcode from: $DEVELOPER_DIR"
-            sudo xcode-select -s "$DEVELOPER_DIR"
-          fi
+          sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer || true
           xcodebuild -version
 
 
