@@ -17,7 +17,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Select Xcode Version
-        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+        run: |
+          DEVELOPER_DIR=$(ls -d /Applications/Xcode*.app/Contents/Developer 2>/dev/null | sort -V | tail -n 1)
+          if [ -n "$DEVELOPER_DIR" ]; then
+            echo "Selecting Xcode from: $DEVELOPER_DIR"
+            sudo xcode-select -s "$DEVELOPER_DIR"
+          fi
+          xcodebuild -version
+
 
       - name: Build Xcode Project
         run: |
