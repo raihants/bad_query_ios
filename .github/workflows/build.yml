@@ -21,20 +21,19 @@ jobs:
 
       - name: Build Xcode Project
         run: |
-          xcodebuild build \
+          xcodebuild archive \
             -project bad_query.xcodeproj \
             -scheme bad_query \
-            -sdk iphoneos \
-            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/bad_query.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            BUILD_DIR=build
+            CODE_SIGN_IDENTITY=""
 
       - name: Package Payload and IPA
         run: |
           mkdir -p Payload
-          cp -r build/Release-iphoneos/bad_query.app Payload/
+          cp -r build/bad_query.xcarchive/Products/Applications/bad_query.app Payload/
           zip -r bad_query.ipa Payload
 
       - name: Upload Build Artifacts
@@ -43,3 +42,4 @@ jobs:
           name: bad_query-ipa
           path: bad_query.ipa
           if-no-files-found: error
+
