@@ -28,26 +28,25 @@ jobs:
 
       - name: Build Xcode Project
         run: |
-          xcodebuild archive \
+          xcodebuild build \
             -project bad_query.xcodeproj \
             -scheme bad_query \
             -destination 'generic/platform=iOS' \
-            -archivePath build/bad_query.xcarchive \
+            -configuration Release \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM="" \
-            PROVISIONING_PROFILE_SPECIFIER=""
-
-
-
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            SYMROOT=build
 
       - name: Package Payload and IPA
         run: |
           mkdir -p Payload
-          cp -r build/bad_query.xcarchive/Products/Applications/bad_query.app Payload/
+          find build -name "bad_query.app" -type d -exec cp -r {} Payload/ \;
           zip -r bad_query.ipa Payload
+
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
